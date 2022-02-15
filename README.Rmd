@@ -25,12 +25,17 @@ devtools::install_github("JasonDude16/FileCheckR")
 ```
 
 ## Motivating Example 
-Suppose you're collecting experimental data from research subjects, and each subject performs a battery of tasks. Each task has several datasets associated with it (e.g., a behavioral dataset consisting of accuracy and response time, and a physiological dataset, such as EEG). All of these files are--hopefully--organized in some logical way. This organizational structure may consist of separate folders for behavioral and physiological folders, each of which has subfolders for each subject, and each subject folder may have several files, for example (whether a database is warranted here is a discussion for another day). Among all of these files and folders, there is bound to be errors and inconsistencies: subjects may have incorrectly formatted IDs (e.g., the ID length should be 5 but it's 6), a subject file is saved in another subject's folder, a subject may not have all the files they're supposed to, etc. Researchers often have protocols in place to find and correct these errors using the help of RAs or similar, but this is tedious, time-consuming, and, most importantly, error-prone. There must be a better way.  
+Suppose you're collecting experimental data from research subjects, and each subject performs a battery of tasks. Each task has several datasets associated with it (e.g., a behavioral dataset consisting of accuracy and response time, and a physiological dataset, such as EEG). All of these files are--hopefully--organized in some logical way. This organizational structure may consist of separate folders for behavioral and physiological folders, each of which has subfolders for each subject, and each subject folder may have several files, for example (whether a database is warranted here is a discussion for another day). 
+
+Among all of these files and folders, there is bound to be errors and inconsistencies: subjects may have incorrectly formatted IDs (e.g., the ID length should be 5 but it's 6), a subject file is saved in another subject's folder, a subject may not have all the files they're supposed to, etc. Researchers often have protocols in place to find and correct these errors using the help of RAs or similar, but this is tedious, time-consuming, and, most importantly, error-prone. There must be a better way.  
+
+```{r}
+library(FileCheckR)
+```
 
 Instead of manually checking and comparing files and folders, you can create a tibble (similar to a data frame) of paths and other information.
 
-```{r example}
-library(FileCheckR)
+```{r}
 make_path_tibble(getwd(), recursive = FALSE)
 ```
 
@@ -45,7 +50,7 @@ x <- get_df_ids(tmp_tbl, ext = "csv", id_col = "id", read_fun = read.csv)
 x[, c("main_dir", "file", "ext", "df_id")]
 ```
 
-To show better examples of the functionality of this package, I'll use the `example_paths` tibble created using `make_path_tibble`.
+To show better examples of the functionality of this package, I'll use the `example_paths` tibble created using `make_path_tibble`. This tibble was created from the following organizational structure: `Task/Subject Folder/Subject Files`
 
 ```{r}
 head(example_paths)
@@ -84,3 +89,5 @@ ext_match(example_paths, exts = c("csv", "psydat", "log"), main_dir, last_dir)
 ```
 
 These are some of the convenience functions, but the tibble structure allows for considerable flexibility in how folders and files are grouped and checked.
+
+Happy file- and folder-checking!

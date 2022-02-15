@@ -26,6 +26,7 @@ organizational structure may consist of separate folders for behavioral
 and physiological folders, each of which has subfolders for each
 subject, and each subject folder may have several files, for example
 (whether a database is warranted here is a discussion for another day).
+
 Among all of these files and folders, there is bound to be errors and
 inconsistencies: subjects may have incorrectly formatted IDs (e.g., the
 ID length should be 5 but it’s 6), a subject file is saved in another
@@ -35,12 +36,15 @@ these errors using the help of RAs or similar, but this is tedious,
 time-consuming, and, most importantly, error-prone. There must be a
 better way.
 
+``` r
+library(FileCheckR)
+```
+
 Instead of manually checking and comparing files and folders, you can
 create a tibble (similar to a data frame) of paths and other
 information.
 
 ``` r
-library(FileCheckR)
 make_path_tibble(getwd(), recursive = FALSE)
 #> # A tibble: 10 x 10
 #>    main_dir  file      ext   dirs  last_dir dirs_list n_dirs mtime              
@@ -53,8 +57,8 @@ make_path_tibble(getwd(), recursive = FALSE)
 #>  6 FileChec… man       ""    /     ""       <chr [0]>      0 2022-02-14 20:44:26
 #>  7 FileChec… NAMESPACE ""    /     ""       <chr [0]>      0 2022-02-14 20:40:41
 #>  8 FileChec… R         ""    /     ""       <chr [0]>      0 2022-02-14 20:40:14
-#>  9 FileChec… README.md "md"  /     ""       <chr [0]>      0 2022-02-14 20:44:24
-#> 10 FileChec… README.R… "Rmd" /     ""       <chr [0]>      0 2022-02-14 21:18:09
+#>  9 FileChec… README.md "md"  /     ""       <chr [0]>      0 2022-02-14 21:18:17
+#> 10 FileChec… README.R… "Rmd" /     ""       <chr [0]>      0 2022-02-14 21:25:51
 #> # … with 2 more variables: partial <chr>, full <chr>
 ```
 
@@ -71,11 +75,13 @@ x[, c("main_dir", "file", "ext", "df_id")]
 #> # A tibble: 1 x 4
 #>   main_dir   file    ext   df_id
 #>   <chr>      <chr>   <chr> <int>
-#> 1 RtmporAtfa tmp.csv csv       1
+#> 1 RtmpJqDONO tmp.csv csv       1
 ```
 
 To show better examples of the functionality of this package, I’ll use
-the `example_paths` tibble created using `make_path_tibble`.
+the `example_paths` tibble created using `make_path_tibble`. This tibble
+was created from the following organizational structure:
+`Task/Subject Folder/Subject Files`
 
 ``` r
 head(example_paths)
@@ -183,3 +189,5 @@ ext_match(example_paths, exts = c("csv", "psydat", "log"), main_dir, last_dir)
 These are some of the convenience functions, but the tibble structure
 allows for considerable flexibility in how folders and files are grouped
 and checked.
+
+Happy file- and folder-checking!
