@@ -167,7 +167,7 @@ in_folder_file_count(example_paths, main_dir, last_dir)
 #> # … with 60 more rows
 ```
 
-If files have different extensions, you can check for their existence.
+If files have different extensions, you can check for their existence and identify discrepancies.
 
 ``` r
 ext_match(example_paths, exts = c("csv", "psydat", "log"), main_dir, last_dir)
