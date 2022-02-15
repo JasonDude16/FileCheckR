@@ -66,9 +66,11 @@ If individual data files have a column of the subject ID, you can
 extract this and add it as a column to the tibble.
 
 ``` r
+# example setup
 tmp <- tempdir()
 file <- paste0(tmp, .Platform$file.sep, "tmp.csv")
 write.csv(data.frame(id = 1), file = file)
+
 tmp_tbl <- make_path_tibble(tmp)
 x <- get_df_ids(tmp_tbl, ext = "csv", id_col = "id", read_fun = read.csv)
 x[, c("main_dir", "file", "ext", "df_id")]
