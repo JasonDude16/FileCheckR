@@ -13,43 +13,74 @@ knitr::opts_chunk$set(
 
 # FileCheckR
 
-The goal of FileCheckR is to ...
+The goal of FileCheckR is to assist with file- and folder-checking processes, specifically for research labs conducting human subject research. 
 
 ## Installation
 
-You can install the released version of FileCheckR from [CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("FileCheckR")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+You can install the development version of FileCheckR from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("JasonDude16/FileCheckR")
 ```
-## Example
 
-This is a basic example which shows you how to solve a common problem:
+## Motivating Example 
+Suppose you're collecting experimental data from research subjects, and each subject performs a battery of tasks. Each task has several datasets associated with it (e.g., a behavioral dataset consisting of accuracy and response time, and a physiological dataset, such as EEG). All of these files are--hopefully--organized in some logical way. This organizational structure may consist of separate folders for behavioral and physiological folders, each of which has subfolders for each subject, and each subject folder may have several files, for example (whether a database is warranted here is a discussion for another day). Among all of these files and folders, there is bound to be errors and inconsistencies: subjects may have incorrectly formatted IDs (e.g., the ID length should be 5 but it's 6), a subject file is saved in another subject's folder, a subject may not have all the files they're supposed to, etc. Researchers often have protocols in place to find and correct these errors using the help of RAs or similar, but this is tedious, time-consuming, and, most importantly, error-prone. There must be a better way.  
+
+Instead of manually checking and comparing files and folders, you can create a tibble (similar to a data frame) of paths and other information.
 
 ```{r example}
 library(FileCheckR)
-## basic example code
+make_path_tibble(getwd(), recursive = FALSE)
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+If individual data files have a column of the subject ID, you can extract this and add it as a column to the tibble. 
 
-```{r cars}
-summary(cars)
+```{r}
+tmp <- tempdir()
+file <- paste0(tmp, .Platform$file.sep, "tmp.csv")
+write.csv(data.frame(id = 1), file = file)
+tmp_tbl <- make_path_tibble(tmp)
+x <- get_df_ids(tmp_tbl, ext = "csv", id_col = "id", read_fun = read.csv)
+x[, c("main_dir", "file", "ext", "df_id")]
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
+To show better examples of the functionality of this package, I'll use the `example_paths` tibble created using `make_path_tibble`.
 
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
+```{r}
+head(example_paths)
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+You can ensure files, folders, and columns match a specified pattern, such as checking if all IDs have a length of 5 (you could do more specific things, too, such as checking if each value of an ID is within a specifc numeric range)  .
+
+```{r}
+match_pattern(example_paths$last_dir, pattern = "^ID_[0-9]{5}$")
+match_pattern(example_paths$file, pattern = "^[0-9]{5}_")
+```
+
+You can compare subject folder names with file names.  
+
+```{r}
+id_match(example_paths$df_id, example_paths$file, "[0-9]{5}", "[0-9]{5}")
+id_match(example_paths$last_dir, example_paths$file, "[0-9]{5}", "[0-9]{4,5}")
+```
+
+If subject folders have multiple files, you can check if the files have the same ID.
+
+```{r}
+in_folder_match(example_paths, "^[0-9]{5}", main_dir, last_dir)
+```
+
+You can count the number of files within each subject folder
+
+```{r}
+in_folder_file_count(example_paths, main_dir, last_dir)
+```
+
+If files have different extensions, you can check for their existence.
+
+```{r}
+ext_match(example_paths, exts = c("csv", "psydat", "log"), main_dir, last_dir)
+```
+
+These are some of the convenience functions, but the tibble structure allows for considerable flexibility in how folders and files are grouped and checked.
