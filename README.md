@@ -81,7 +81,7 @@ x[, c("main_dir", "file", "ext", "df_id")]
 To show better examples of the functionality of this package, I’ll use
 the `example_paths` tibble created using `make_path_tibble`. This tibble
 was created from the following organizational structure:
-`Task/Subject Folder/Subject Files`
+`Task/Subject Folder/Subject Files`.
 
 ``` r
 head(example_paths)
@@ -100,7 +100,7 @@ head(example_paths)
 You can ensure files, folders, and columns match a specified pattern,
 such as checking if all IDs have a length of 5 (you could do more
 specific things, too, such as checking if each value of an ID is within
-a specifc numeric range) .
+a specifc numeric range).
 
 ``` r
 match_pattern(example_paths$last_dir, pattern = "^ID_[0-9]{5}$")
@@ -144,7 +144,7 @@ in_folder_match(example_paths, "^[0-9]{5}", main_dir, last_dir)
 #> # … with 60 more rows
 ```
 
-You can count the number of files within each subject folder
+You can count the number of files within each subject folder.
 
 ``` r
 in_folder_file_count(example_paths, main_dir, last_dir)
