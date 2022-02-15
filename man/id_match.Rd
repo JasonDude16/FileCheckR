@@ -16,7 +16,7 @@ id_match(x, y, pattern_x, pattern_y)
 \item{pattern_y}{regular expression used by str_match()}
 }
 \value{
-
+Tibble structure
 }
 \description{
 Compare Folder/File IDs

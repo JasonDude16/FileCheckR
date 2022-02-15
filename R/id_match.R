@@ -5,7 +5,7 @@
 #' @param pattern_x regular expression used by str_match()
 #' @param pattern_y regular expression used by str_match()
 #'
-#' @return
+#' @return Tibble structure
 #' @export
 #'
 #' @examples

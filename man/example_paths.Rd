@@ -5,7 +5,7 @@
 \alias{example_paths}
 \title{Tibble of paths from research study.}
 \format{
-A data frame with 210 rows and 11 variables:
+A tibble with 210 rows and 11 variables:
 \describe{
 \item{main_dir}{top-level directory}
 \item{file}{name of file}
